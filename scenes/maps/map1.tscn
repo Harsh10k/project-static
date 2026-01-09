@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://kiila6mjyue"]
+[gd_scene load_steps=3 format=3 uid="uid://kiila6mjyue"]
 
 [ext_resource type="PackedScene" uid="uid://ccyiy083eaodq" path="res://scenes/entities/player/player.tscn" id="1_8e04j"]
+[ext_resource type="PackedScene" uid="uid://ttmi2u3kncab" path="res://scenes/entities/enemies/crawler.tscn" id="2_plhdw"]
 
 [node name="Map1" type="Node2D"]
 
@@ -10,5 +11,8 @@ offset_bottom = 2066.0
 color = Color(0.1764706, 0.4392157, 0.21176471, 1)
 
 [node name="Player" parent="." instance=ExtResource("1_8e04j")]
-position = Vector2(210, 126)
+position = Vector2(-132, -76)
 speed = 350
+
+[node name="crawler" parent="." instance=ExtResource("2_plhdw")]
+position = Vector2(313, 93)

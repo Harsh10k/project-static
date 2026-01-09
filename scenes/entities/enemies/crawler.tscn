@@ -1,0 +1,44 @@
+[gd_scene load_steps=7 format=3 uid="uid://ttmi2u3kncab"]
+
+[ext_resource type="Script" uid="uid://blhmlwhna4tuv" path="res://scenes/entities/enemies/crawler.gd" id="1_2swpi"]
+[ext_resource type="Texture2D" uid="uid://b0adcjvneohoh" path="res://assets/sprites/enemies/tile_0122.png" id="1_5s3ae"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2swpi"]
+atlas = ExtResource("1_5s3ae")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_g2iy2"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2swpi")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_lq3mc"]
+radius = 29.017237
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_h8vfb"]
+radius = 404.0792
+
+[node name="crawler" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 11
+script = ExtResource("1_2swpi")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(4, 3.6969697)
+sprite_frames = SubResource("SpriteFrames_g2iy2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_lq3mc")
+
+[node name="DetectionArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
+shape = SubResource("CircleShape2D_h8vfb")
+
+[connection signal="body_entered" from="DetectionArea" to="." method="_on_detection_area_body_entered"]
