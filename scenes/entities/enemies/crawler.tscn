@@ -37,6 +37,8 @@ sprite_frames = SubResource("SpriteFrames_g2iy2")
 shape = SubResource("CircleShape2D_lq3mc")
 
 [node name="DetectionArea" type="Area2D" parent="."]
+collision_layer = 32
+collision_mask = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
 shape = SubResource("CircleShape2D_h8vfb")
