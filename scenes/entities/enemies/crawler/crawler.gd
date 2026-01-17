@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+@export var config: EnemyConfig   # 👈 THIS makes it modular
+
 enum State {
 	IDLE,
 	CHASE,
@@ -11,46 +13,24 @@ var current_state: State = State.IDLE
 
 var spawn_position: Vector2
 var temp_spawn_position: Vector2
-var using_temp_spawn: bool = false
-var temp_spawn_timer: float = 0.0
-
-@export var temp_spawn_duration: float = 6.0
+var using_temp_spawn := false
+var temp_spawn_timer := 0.0
 
 var player: CharacterBody2D
 
-@export var speed: int = 225
-@export var search_speed: int = 120
-@export var return_speed: int = 140
+var idle_timer := 0.0
+var idle_pausing := true
+var idle_direction := Vector2.ZERO
+var current_idle_direction := Vector2.ZERO
 
-@export var turn_speed: float = 900.0
-@export var slow_down_rate: float = 120.0
-
-@export var idle_speed: int = 80
-@export var idle_pause_duration: float = 1.3
-@export var idle_move_duration: float = 2.0
-
-@export var idle_inner_radius: float = 48.0
-@export var idle_outer_radius: float = 192.0
-
-@export var direction_smoothness: float = 4.0
-
-var idle_timer: float = 0.0
-var idle_pausing: bool = true
-var idle_direction: Vector2 = Vector2.ZERO
-var current_idle_direction: Vector2 = Vector2.ZERO
-
-@export var search_duration: float = 2.5
-var search_timer: float = 0.0
-var search_direction: Vector2 = Vector2.ZERO
-
-@export var return_distance_threshold: float = 6.0
+var search_timer := 0.0
+var search_direction := Vector2.ZERO
 
 func _ready() -> void:
 	spawn_position = global_position
 	enter_idle()
 
 func _physics_process(delta: float) -> void:
-	# Temp spawn expiry → RETURN
 	if using_temp_spawn:
 		temp_spawn_timer -= delta
 		if temp_spawn_timer <= 0.0:
@@ -71,12 +51,11 @@ func _physics_process(delta: float) -> void:
 
 func enter_idle() -> void:
 	idle_pausing = true
-	idle_timer = idle_pause_duration
+	idle_timer = config.idle_pause_duration
 	idle_direction = choose_idle_direction()
 	current_idle_direction = idle_direction
 
 func idle_state(delta: float) -> void:
-	# Immediate interrupt
 	if player:
 		current_state = State.CHASE
 		return
@@ -84,39 +63,43 @@ func idle_state(delta: float) -> void:
 	idle_timer -= delta
 
 	if idle_pausing:
-		# Soft drift instead of full stop
 		var drift_velocity = current_idle_direction * 20.0
-		velocity = velocity.move_toward(drift_velocity, slow_down_rate * delta)
+		velocity = velocity.move_toward(
+			drift_velocity,
+			config.slow_down_rate * delta
+		)
 		move_and_slide()
 
 		if idle_timer <= 0.0:
 			idle_pausing = false
-			idle_timer = idle_move_duration
+			idle_timer = config.idle_move_duration
 			idle_direction = choose_idle_direction()
 	else:
-		# Smooth direction blending
 		current_idle_direction = current_idle_direction.lerp(
 			idle_direction,
-			direction_smoothness * delta
+			config.direction_smoothness * delta
 		).normalized()
 
-		var target_velocity = current_idle_direction * idle_speed
-		velocity = velocity.move_toward(target_velocity, turn_speed * delta)
+		var target_velocity = current_idle_direction * config.idle_speed
+		velocity = velocity.move_toward(
+			target_velocity,
+			config.turn_speed * delta
+		)
 		move_and_slide()
 
 		if idle_timer <= 0.0:
 			idle_pausing = true
-			idle_timer = idle_pause_duration
+			idle_timer = config.idle_pause_duration
 
 func choose_idle_direction() -> Vector2:
 	var center = get_idle_center()
 	var to_center = center - global_position
 	var distance = to_center.length()
 
-	if distance > idle_outer_radius:
+	if distance > config.idle_outer_radius:
 		return to_center.normalized()
 
-	if distance < idle_inner_radius:
+	if distance < config.idle_inner_radius:
 		return (-to_center).normalized()
 
 	return Vector2(
@@ -130,7 +113,7 @@ func get_idle_center() -> Vector2:
 func chase_state(delta: float) -> void:
 	if not player:
 		current_state = State.SEARCH
-		search_timer = search_duration
+		search_timer = config.search_duration
 		search_direction = Vector2(
 			randf_range(-1, 1),
 			randf_range(-1, 1)
@@ -138,8 +121,11 @@ func chase_state(delta: float) -> void:
 		return
 
 	var dir = (player.global_position - global_position).normalized()
-	var target_velocity = dir * speed
-	velocity = velocity.move_toward(target_velocity, turn_speed * delta)
+	var target_velocity = dir * config.speed
+	velocity = velocity.move_toward(
+		target_velocity,
+		config.turn_speed * delta
+	)
 	move_and_slide()
 
 func search_state(delta: float) -> void:
@@ -148,27 +134,33 @@ func search_state(delta: float) -> void:
 	if search_timer <= 0.0:
 		temp_spawn_position = global_position
 		using_temp_spawn = true
-		temp_spawn_timer = temp_spawn_duration
+		temp_spawn_timer = config.temp_spawn_duration
 
 		current_state = State.IDLE
 		enter_idle()
 		return
 
-	var target_velocity = search_direction * search_speed
-	velocity = velocity.move_toward(target_velocity, turn_speed * delta)
+	var target_velocity = search_direction * config.search_speed
+	velocity = velocity.move_toward(
+		target_velocity,
+		config.turn_speed * delta
+	)
 	move_and_slide()
 
 func return_state(delta: float) -> void:
 	var to_spawn = spawn_position - global_position
 
-	if to_spawn.length() <= return_distance_threshold:
+	if to_spawn.length() <= config.return_distance_threshold:
 		current_state = State.IDLE
 		enter_idle()
 		return
 
 	var dir = to_spawn.normalized()
-	var target_velocity = dir * return_speed
-	velocity = velocity.move_toward(target_velocity, turn_speed * delta)
+	var target_velocity = dir * config.return_speed
+	velocity = velocity.move_toward(
+		target_velocity,
+		config.turn_speed * delta
+	)
 	move_and_slide()
 
 func _on_detection_area_body_entered(body: CharacterBody2D) -> void:
@@ -178,7 +170,7 @@ func _on_detection_area_body_entered(body: CharacterBody2D) -> void:
 func _on_detection_area_body_exited(_body: CharacterBody2D) -> void:
 	player = null
 	current_state = State.SEARCH
-	search_timer = search_duration
+	search_timer = config.search_duration
 	search_direction = Vector2(
 		randf_range(-1, 1),
 		randf_range(-1, 1)
@@ -188,5 +180,5 @@ func _draw() -> void:
 	var center = get_idle_center()
 	var local_center = to_local(center)
 
-	draw_circle(local_center, idle_inner_radius, Color(1, 0, 0, 0.6))
-	draw_circle(local_center, idle_outer_radius, Color(0, 0, 1, 0.6))
+	draw_circle(local_center, config.idle_inner_radius, Color(1, 0, 0, 0.6))
+	draw_circle(local_center, config.idle_outer_radius, Color(0, 0, 1, 0.6))

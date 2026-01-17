@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://ttmi2u3kncab"]
+[gd_scene load_steps=8 format=3 uid="uid://ttmi2u3kncab"]
 
-[ext_resource type="Script" uid="uid://blhmlwhna4tuv" path="res://scenes/entities/enemies/crawler.gd" id="1_2swpi"]
+[ext_resource type="Script" uid="uid://blhmlwhna4tuv" path="res://scenes/entities/enemies/crawler/crawler.gd" id="1_2swpi"]
 [ext_resource type="Texture2D" uid="uid://b0adcjvneohoh" path="res://assets/sprites/enemies/tile_0122.png" id="1_5s3ae"]
+[ext_resource type="Resource" uid="uid://kgsvybtq3mrf" path="res://scenes/entities/enemies/crawler/crawler_config.tres" id="2_upce5"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2swpi"]
 atlas = ExtResource("1_5s3ae")
@@ -28,6 +29,7 @@ radius = 404.0792
 collision_layer = 4
 collision_mask = 11
 script = ExtResource("1_2swpi")
+config = ExtResource("2_upce5")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 scale = Vector2(4, 3.6969697)
