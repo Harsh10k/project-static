@@ -12,3 +12,6 @@ func _on_body_entered(body):
 	if body.has_method("take_damage"):
 		body.take_damage(damage)
 	queue_free()
+
+func _draw() -> void:
+	draw_circle(to_local(position), 5, Color(1, 0, 0, 1))

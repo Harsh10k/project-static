@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" uid="uid://dks3dho2m2yrf" path="res://scenes/weapons/bullet/bullet.gd" id="1_xc2js"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_in1rd"]
-size = Vector2(10, 10)
+[sub_resource type="CircleShape2D" id="CircleShape2D_xc2js"]
+radius = 5.0
 
 [node name="Area2D" type="Area2D"]
 collision_layer = 8
@@ -13,13 +13,6 @@ metadata/_edit_vertical_guides_ = [-5.0, 5.0]
 metadata/_edit_horizontal_guides_ = [-5.0, 5.0]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("RectangleShape2D_in1rd")
-
-[node name="ColorRect" type="ColorRect" parent="."]
-offset_left = -5.0
-offset_top = -5.0
-offset_right = 5.0
-offset_bottom = 5.0
-color = Color(1, 0.23137255, 0.13725491, 1)
+shape = SubResource("CircleShape2D_xc2js")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
