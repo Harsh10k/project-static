@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://blhmlwhna4tuv" path="res://scenes/entities/enemies/crawler/crawler.gd" id="1_2swpi"]
 [ext_resource type="Texture2D" uid="uid://b0adcjvneohoh" path="res://assets/sprites/enemies/tile_0122.png" id="1_5s3ae"]
-[ext_resource type="Resource" uid="uid://kgsvybtq3mrf" path="res://scenes/entities/enemies/crawler/crawler_config.tres" id="2_upce5"]
+[ext_resource type="Resource" uid="uid://kgsvybtq3mrf" path="res://resources/enemy_configs/crawler_config.tres" id="2_upce5"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2swpi"]
 atlas = ExtResource("1_5s3ae")
