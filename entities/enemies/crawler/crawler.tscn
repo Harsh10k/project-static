@@ -1,8 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://ttmi2u3kncab"]
+[gd_scene format=3 uid="uid://ttmi2u3kncab"]
 
-[ext_resource type="Script" uid="uid://blhmlwhna4tuv" path="res://scenes/entities/enemies/crawler/crawler.gd" id="1_2swpi"]
-[ext_resource type="Texture2D" uid="uid://b0adcjvneohoh" path="res://assets/sprites/enemies/tile_0122.png" id="1_5s3ae"]
-[ext_resource type="Resource" uid="uid://kgsvybtq3mrf" path="res://resources/enemy_configs/crawler_config.tres" id="2_upce5"]
+[ext_resource type="Script" uid="uid://blhmlwhna4tuv" path="res://entities/enemies/crawler/crawler.gd" id="1_2swpi"]
+[ext_resource type="Texture2D" uid="uid://b0adcjvneohoh" path="res://scenes/common/assets/tile_0122.png" id="1_5s3ae"]
+[ext_resource type="Resource" uid="uid://kgsvybtq3mrf" path="res://entities/enemies/crawler_config.tres" id="2_upce5"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2swpi"]
 atlas = ExtResource("1_5s3ae")
@@ -25,24 +25,24 @@ radius = 29.017237
 [sub_resource type="CircleShape2D" id="CircleShape2D_h8vfb"]
 radius = 404.0792
 
-[node name="crawler" type="CharacterBody2D"]
+[node name="crawler" type="CharacterBody2D" unique_id=1373736558]
 collision_layer = 4
 collision_mask = 11
 script = ExtResource("1_2swpi")
 config = ExtResource("2_upce5")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1847865119]
 scale = Vector2(4, 3.6969697)
 sprite_frames = SubResource("SpriteFrames_g2iy2")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=130092437]
 shape = SubResource("CircleShape2D_lq3mc")
 
-[node name="DetectionArea" type="Area2D" parent="."]
+[node name="DetectionArea" type="Area2D" parent="." unique_id=434198571]
 collision_layer = 32
 collision_mask = 3
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea" unique_id=1741934533]
 shape = SubResource("CircleShape2D_h8vfb")
 
 [connection signal="body_entered" from="DetectionArea" to="." method="_on_detection_area_body_entered"]
