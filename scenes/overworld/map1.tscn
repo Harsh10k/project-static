@@ -2,17 +2,20 @@
 
 [ext_resource type="PackedScene" uid="uid://nsv77xymd7x3" path="res://entities/player/player.tscn" id="1_8e04j"]
 [ext_resource type="PackedScene" uid="uid://ttmi2u3kncab" path="res://entities/enemies/crawler/crawler.tscn" id="2_plhdw"]
+[ext_resource type="PackedScene" uid="uid://dlrjw3lwkbqmq" path="res://scenes/ui/healthbar.tscn" id="3_rmof0"]
 
-[node name="Map1" type="Node2D"]
+[node name="Map1" type="Node2D" unique_id=1111517951]
 
-[node name="MapSpritePlaceholder" type="ColorRect" parent="."]
+[node name="MapSpritePlaceholder" type="ColorRect" parent="." unique_id=673886335]
 offset_right = 2473.0
 offset_bottom = 2066.0
 color = Color(0.1764706, 0.4392157, 0.21176471, 1)
 
-[node name="Player" parent="." instance=ExtResource("1_8e04j")]
+[node name="Player" parent="." unique_id=1803629864 instance=ExtResource("1_8e04j")]
 position = Vector2(-132, -76)
 speed = 350
 
-[node name="crawler" parent="." instance=ExtResource("2_plhdw")]
-position = Vector2(313, 93)
+[node name="crawler" parent="." unique_id=2045113414 instance=ExtResource("2_plhdw")]
+position = Vector2(380, 123)
+
+[node name="health" parent="." unique_id=1464077758 instance=ExtResource("3_rmof0")]
