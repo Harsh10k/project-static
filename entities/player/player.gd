@@ -18,6 +18,7 @@ var input_direction: Vector2
 var last_anim_direction: String = "Down"
 var is_hurt: bool = false
 var is_attacking: bool = false
+@onready var hurt_box = $HurtBox
 
 func _ready() -> void:
 	fire_timer.wait_time = fire_rate
