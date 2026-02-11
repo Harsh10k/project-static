@@ -4,26 +4,25 @@
 [ext_resource type="Script" uid="uid://dodxm43opvh8q" path="res://entities/player/player.gd" id="1_sglur"]
 [ext_resource type="PackedScene" uid="uid://beo8uu7x37rnd" path="res://combat/projectiles/bullet/bullet.tscn" id="2_bls4j"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_dovo2"]
-size = Vector2(64, 64)
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sglur"]
-size = Vector2(64, 64)
+size = Vector2(66, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bls4j"]
+size = Vector2(66, 64)
 
 [node name="Player" type="CharacterBody2D" unique_id=1495208272]
 collision_layer = 2
 collision_mask = 21
+motion_mode = 1
 script = ExtResource("1_sglur")
 bullet_scene = ExtResource("2_bls4j")
 
 [node name="PlayerSpritePlaceholder" type="Sprite2D" parent="." unique_id=198074474]
-position = Vector2(0, 1)
-scale = Vector2(0.5, 0.5)
+scale = Vector2(0.517, 0.5)
 texture = ExtResource("1_8afob")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=265708090]
-position = Vector2(0, 1)
-shape = SubResource("RectangleShape2D_dovo2")
+shape = SubResource("RectangleShape2D_sglur")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1939110955]
 offset = Vector2(0, 1)
@@ -35,5 +34,4 @@ position_smoothing_speed = 15.0
 [node name="HurtBox" type="Area2D" parent="." unique_id=248093998]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox" unique_id=1258830280]
-position = Vector2(0, 1)
-shape = SubResource("RectangleShape2D_sglur")
+shape = SubResource("RectangleShape2D_bls4j")

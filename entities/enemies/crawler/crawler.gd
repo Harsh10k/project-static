@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-@export var config: EnemyConfig   # 👈 THIS makes it modular
+@export var config: EnemyConfig
 
 enum State {
 	IDLE,
@@ -31,7 +31,8 @@ func _ready() -> void:
 	enter_idle()
 
 func _physics_process(delta: float) -> void:
-	if using_temp_spawn:
+	# Prevent temp timer from overriding CHASE
+	if using_temp_spawn and current_state != State.CHASE:
 		temp_spawn_timer -= delta
 		if temp_spawn_timer <= 0.0:
 			using_temp_spawn = false
@@ -111,7 +112,7 @@ func get_idle_center() -> Vector2:
 	return temp_spawn_position if using_temp_spawn else spawn_position
 
 func chase_state(delta: float) -> void:
-	if not player:
+	if not player or not can_see_player():
 		current_state = State.SEARCH
 		search_timer = config.search_duration
 		search_direction = Vector2(
@@ -129,6 +130,11 @@ func chase_state(delta: float) -> void:
 	move_and_slide()
 
 func search_state(delta: float) -> void:
+	# If player reappears → instantly chase
+	if player:
+		current_state = State.CHASE
+		return
+
 	search_timer -= delta
 
 	if search_timer <= 0.0:
@@ -148,6 +154,11 @@ func search_state(delta: float) -> void:
 	move_and_slide()
 
 func return_state(delta: float) -> void:
+	# If player visible → cancel return
+	if player:
+		current_state = State.CHASE
+		return
+
 	var to_spawn = spawn_position - global_position
 
 	if to_spawn.length() <= config.return_distance_threshold:
@@ -167,14 +178,28 @@ func _on_detection_area_body_entered(body: CharacterBody2D) -> void:
 	player = body
 	current_state = State.CHASE
 
-func _on_detection_area_body_exited(_body: CharacterBody2D) -> void:
-	player = null
-	current_state = State.SEARCH
-	search_timer = config.search_duration
-	search_direction = Vector2(
-		randf_range(-1, 1),
-		randf_range(-1, 1)
-	).normalized()
+func _on_detection_area_body_exited(body: CharacterBody2D) -> void:
+	if body == player:
+		player = null
+		current_state = State.SEARCH
+		search_timer = config.search_duration
+		search_direction = Vector2(
+			randf_range(-1, 1),
+			randf_range(-1, 1)
+		).normalized()
+
+func can_see_player() -> bool:
+	if not player:
+		return false
+
+	var ray = $VisionRay
+	ray.target_position = to_local(player.global_position)
+	ray.force_raycast_update()
+
+	if ray.is_colliding():
+		return ray.get_collider() == player
+
+	return false
 
 func _draw() -> void:
 	var center = get_idle_center()
